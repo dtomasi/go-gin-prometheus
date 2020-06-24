@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -354,11 +355,19 @@ func (p *Prometheus) UseWithAuth(e *gin.Engine, accounts gin.Accounts) {
 }
 
 // HandlerFunc defines handler function for middleware
-func (p *Prometheus) HandlerFunc() gin.HandlerFunc {
+func (p *Prometheus) HandlerFunc(excludePattern string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.URL.Path == p.MetricsPath {
 			c.Next()
 			return
+		}
+
+		if len(excludePattern) > 0 {
+			match, _ := regexp.MatchString(excludePattern, c.Request.URL.Path)
+			if  match {
+				c.Next()
+				return
+			}
 		}
 
 		start := time.Now()

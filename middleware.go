@@ -344,13 +344,13 @@ func (p *Prometheus) registerMetrics(subsystem string) {
 
 // Use adds the middleware to a gin engine.
 func (p *Prometheus) Use(e *gin.Engine) {
-	e.Use(p.HandlerFunc())
+	e.Use(p.HandlerFunc(""))
 	p.SetMetricsPath(e)
 }
 
 // UseWithAuth adds the middleware to a gin engine with BasicAuth.
 func (p *Prometheus) UseWithAuth(e *gin.Engine, accounts gin.Accounts) {
-	e.Use(p.HandlerFunc())
+	e.Use(p.HandlerFunc(""))
 	p.SetMetricsPathWithAuth(e, accounts)
 }
 

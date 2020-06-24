@@ -2,6 +2,7 @@ package ginprometheus
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -363,10 +364,14 @@ func (p *Prometheus) HandlerFunc(excludePattern string) gin.HandlerFunc {
 		}
 
 		if len(excludePattern) > 0 {
+			fmt.Println("Got pattern")
 			match, _ := regexp.MatchString(excludePattern, c.Request.URL.Path)
 			if  match {
+				fmt.Println(fmt.Sprintf("pattern matched %s", c.Request.URL.Path))
 				c.Next()
 				return
+			} else {
+				fmt.Println(fmt.Sprintf("pattern did not match %s", c.Request.URL.Path))
 			}
 		}
 

@@ -185,10 +185,10 @@ func (p *Prometheus) SetListenAddressWithRouter(listenAddress string, r *gin.Eng
 func (p *Prometheus) SetMetricsPath(e *gin.Engine) {
 
 	if p.listenAddress != "" {
-		p.router.GET(p.MetricsPath, prometheusHandler())
+		p.router.GET(p.MetricsPath, PrometheusHandler())
 		p.runServer()
 	} else {
-		e.GET(p.MetricsPath, prometheusHandler())
+		e.GET(p.MetricsPath, PrometheusHandler())
 	}
 }
 
@@ -196,10 +196,10 @@ func (p *Prometheus) SetMetricsPath(e *gin.Engine) {
 func (p *Prometheus) SetMetricsPathWithAuth(e *gin.Engine, accounts gin.Accounts) {
 
 	if p.listenAddress != "" {
-		p.router.GET(p.MetricsPath, gin.BasicAuth(accounts), prometheusHandler())
+		p.router.GET(p.MetricsPath, gin.BasicAuth(accounts), PrometheusHandler())
 		p.runServer()
 	} else {
-		e.GET(p.MetricsPath, gin.BasicAuth(accounts), prometheusHandler())
+		e.GET(p.MetricsPath, gin.BasicAuth(accounts), PrometheusHandler())
 	}
 
 }
@@ -386,7 +386,7 @@ func (p *Prometheus) HandlerFunc() gin.HandlerFunc {
 	}
 }
 
-func prometheusHandler() gin.HandlerFunc {
+func PrometheusHandler() gin.HandlerFunc {
 	h := promhttp.Handler()
 	return func(c *gin.Context) {
 		h.ServeHTTP(c.Writer, c.Request)
